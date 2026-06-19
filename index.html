@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WSU Library | DHET Accredited Journals Search</title>
+<style>
+  :root{
+    --maroon:#551516;
+    --maroon-light:#7A2426;
+    --ochre:#CF8029;
+    --ochre-light:#E0A35E;
+    --red:#A02124;
+    --terracotta:#B45736;
+    --sage:#546A55;
+    --mauve:#A080A8;
+    --charcoal:#2B2926;
+    --grey:#6E6660;
+    --grey-light:#E4DFD6;
+    --cream:#F7F3EA;
+    --white:#FFFFFF;
+    --green:#3F7D4F;
+    --amber:#B97D1F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Georgia', 'Times New Roman', serif;
+    background:var(--cream);
+    color:var(--charcoal);
+  }
+  header{
+    background:var(--white);
+    border-bottom:5px solid var(--ochre);
+    box-shadow:0 2px 8px rgba(43,41,38,0.08);
+  }
+  .header-inner{
+    max-width:1000px;
+    margin:0 auto;
+    padding:20px 24px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .header-inner img{
+    height:54px;
+    width:auto;
+    flex-shrink:0;
+  }
+  .header-text{
+    border-left:2px solid var(--grey-light);
+    padding-left:20px;
+  }
+  .header-text h1{
+    margin:0;
+    font-size:1.25rem;
+    color:var(--maroon);
+    font-weight:700;
+  }
+  .header-text p{
+    margin:4px 0 0;
+    color:var(--grey);
+    font-size:0.9rem;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  main{
+    max-width:1000px;
+    margin:0 auto;
+    padding:32px 24px 60px;
+  }
+  .search-card{
+    background:var(--white);
+    border:1px solid var(--grey-light);
+    border-left:6px solid var(--ochre);
+    border-radius:6px;
+    padding:24px;
+    box-shadow:0 2px 10px rgba(43,41,38,0.06);
+  }
+  .search-card label{
+    display:block;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--maroon);
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .search-row{
+    display:flex;
+    gap:10px;
+  }
+  #searchInput{
+    flex:1;
+    padding:13px 16px;
+    font-size:1rem;
+    border:2px solid var(--grey-light);
+    border-radius:5px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    outline:none;
+    transition:border-color .15s;
+  }
+  #searchInput:focus{
+    border-color:var(--ochre);
+  }
+  #searchType{
+    padding:13px 12px;
+    border:2px solid var(--grey-light);
+    border-radius:5px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    background:var(--white);
+    color:var(--charcoal);
+    font-size:0.92rem;
+  }
+  .hint{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:0.82rem;
+    color:var(--grey);
+    margin-top:10px;
+  }
+  #resultsCount{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:0.85rem;
+    color:var(--grey);
+    margin:18px 2px 10px;
+  }
+  .result-card{
+    background:var(--white);
+    border:1px solid var(--grey-light);
+    border-radius:6px;
+    padding:18px 20px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    border-left:4px solid var(--terracotta);
+  }
+  .result-info{flex:1;min-width:240px;}
+  .result-title{
+    font-size:1.08rem;
+    font-weight:700;
+    color:var(--maroon);
+    margin:0 0 6px;
+  }
+  .result-meta{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:0.85rem;
+    color:var(--grey);
+    line-height:1.6;
+  }
+  .result-meta b{color:var(--charcoal);}
+  .badge{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-weight:700;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    padding:8px 14px;
+    border-radius:20px;
+    white-space:nowrap;
+    color:var(--white);
+  }
+  .badge-yes{background:var(--sage);}
+  .badge-no{background:var(--red);}
+  .badge-unknown{background:var(--amber);}
+  .empty-state, .welcome-state{
+    text-align:center;
+    padding:50px 20px;
+    color:var(--grey);
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  .welcome-state svg{margin-bottom:14px;opacity:0.7;}
+  .stats-strip{
+    display:flex;
+    gap:14px;
+    margin-top:22px;
+    flex-wrap:wrap;
+  }
+  .stat-box{
+    flex:1;
+    min-width:130px;
+    background:var(--white);
+    border:1px solid var(--grey-light);
+    border-top:4px solid var(--maroon);
+    border-radius:6px;
+    padding:14px 16px;
+    text-align:center;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  .stat-box:nth-child(2){border-top-color:var(--sage);}
+  .stat-box:nth-child(3){border-top-color:var(--red);}
+  .stat-box:nth-child(4){border-top-color:var(--ochre);}
+  .stat-box .num{
+    font-size:1.5rem;
+    font-weight:800;
+    color:var(--maroon);
+  }
+  .stat-box .lbl{
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--grey);
+    margin-top:2px;
+  }
+  footer{
+    background:var(--maroon);
+    color:var(--grey-light);
+    text-align:center;
+    padding:22px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:0.8rem;
+  }
+  footer span{color:var(--ochre-light);}
+  @media (max-width:560px){
+    .search-row{flex-direction:column;}
+    .header-text{border-left:none;padding-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <img src="logo.png" alt="iYunivesithi Walter Sisulu logo">
+    <div class="header-text">
+      <h1>Library Services</h1>
+      <p>DHET Accredited Journal List Lookup · 2026–2027</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="search-card">
+    <label for="searchInput">Search by journal title or ISSN / eISSN</label>
+    <div class="search-row">
+      <input id="searchInput" type="text" placeholder="e.g. South African Journal of Science, or 0038-2353" autocomplete="off">
+      <select id="searchType">
+        <option value="title">Title</option>
+        <option value="issn">ISSN / eISSN</option>
+      </select>
+    </div>
+    <div class="hint">Start typing — results update as you go. Data sourced from the DHET Master Journal List, supplied for WSU Library accreditation checks.</div>
+  </div>
+
+  <div id="resultsCount"></div>
+  <div id="results"></div>
+
+  <div class="stats-strip" id="statsStrip"></div>
+</main>
+
+<footer>
+  Walter Sisulu Library Services &nbsp;·&nbsp; For accreditation queries contact your <span>Faculty Librarian</span> &nbsp;·&nbsp; Source: Department of Higher Education and Training (DHET)
+</footer>
+
+<script src="journals_data.js"></script>
+<script>
+// Columns: [title, issn, eissn, status, qualify, publisher]
+const input = document.getElementById('searchInput');
+const typeSel = document.getElementById('searchType');
+const resultsEl = document.getElementById('results');
+const countEl = document.getElementById('resultsCount');
+const statsStrip = document.getElementById('statsStrip');
+
+function badgeFor(qualify){
+  if(qualify === 'Yes') return '<span class="badge badge-yes">Accredited</span>';
+  if(qualify === 'No') return '<span class="badge badge-no">Not Accredited</span>';
+  return '<span class="badge badge-unknown">Unclear</span>';
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderWelcome(){
+  resultsEl.innerHTML = `<div class="welcome-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#CF8029" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+    <div>Search for a journal title or ISSN above to check DHET accreditation status.</div>
+  </div>`;
+  countEl.textContent = '';
+}
+
+function renderResults(matches, query){
+  if(matches.length === 0){
+    resultsEl.innerHTML = `<div class="empty-state">No journal found matching "${escapeHtml(query)}". Try a partial title, or search by ISSN instead.</div>`;
+    countEl.textContent = '';
+    return;
+  }
+  countEl.textContent = `${matches.length.toLocaleString()} result${matches.length===1?'':'s'} found`;
+  const shown = matches.slice(0, 100);
+  resultsEl.innerHTML = shown.map(r => {
+    const [title, issn, eissn, status, qualify, publisher] = r;
+    return `<div class="result-card">
+      <div class="result-info">
+        <p class="result-title">${escapeHtml(title)}</p>
+        <div class="result-meta">
+          ${issn ? `<b>ISSN:</b> ${escapeHtml(issn)} &nbsp; ` : ''}${eissn ? `<b>eISSN:</b> ${escapeHtml(eissn)}<br>` : '<br>'}
+          ${publisher ? `<b>Publisher:</b> ${escapeHtml(publisher)}<br>` : ''}
+          ${status ? `<b>Status:</b> ${escapeHtml(status)}` : ''}
+        </div>
+      </div>
+      ${badgeFor(qualify)}
+    </div>`;
+  }).join('') + (matches.length > 100 ? `<div class="hint" style="text-align:center;margin-top:8px;">Showing first 100 of ${matches.length.toLocaleString()} results — refine your search for a precise match.</div>` : '');
+}
+
+function doSearch(){
+  const q = input.value.trim().toLowerCase();
+  if(q.length === 0){ renderWelcome(); return; }
+  const type = typeSel.value;
+  let matches;
+  if(type === 'issn'){
+    const qn = q.replace(/[^0-9x]/g,'');
+    matches = JOURNAL_DATA.filter(r => {
+      const issn = (r[1]||'').toLowerCase().replace(/[^0-9x]/g,'');
+      const eissn = (r[2]||'').toLowerCase().replace(/[^0-9x]/g,'');
+      return (issn && issn.includes(qn)) || (eissn && eissn.includes(qn));
+    });
+  } else {
+    matches = JOURNAL_DATA.filter(r => r[0] && r[0].toLowerCase().includes(q));
+  }
+  renderResults(matches, input.value.trim());
+}
+
+let debounceTimer;
+input.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(doSearch, 120);
+});
+typeSel.addEventListener('change', doSearch);
+
+function renderStats(){
+  const total = JOURNAL_DATA.length;
+  const yes = JOURNAL_DATA.filter(r => r[4] === 'Yes').length;
+  const no = JOURNAL_DATA.filter(r => r[4] === 'No').length;
+  const publishers = new Set(JOURNAL_DATA.map(r => r[5]).filter(Boolean)).size;
+  statsStrip.innerHTML = `
+    <div class="stat-box"><div class="num">${total.toLocaleString()}</div><div class="lbl">Journals Listed</div></div>
+    <div class="stat-box"><div class="num">${yes.toLocaleString()}</div><div class="lbl">Accredited</div></div>
+    <div class="stat-box"><div class="num">${no.toLocaleString()}</div><div class="lbl">Not Accredited</div></div>
+    <div class="stat-box"><div class="num">${publishers.toLocaleString()}</div><div class="lbl">Publishers</div></div>
+  `;
+}
+
+renderWelcome();
+renderStats();
+</script>
+</body>
+</html>
