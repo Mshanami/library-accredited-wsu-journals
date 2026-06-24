@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WS Library | DHET Accredited Journals Search</title>
+<title>WSU Library | DHET Accredited Journals Search</title>
 <style>
   :root{
     --maroon:#551516;
@@ -218,6 +218,145 @@
     .search-row{flex-direction:column;}
     .header-text{border-left:none;padding-left:0;}
   }
+
+  /* ── Chat widget ── */
+  #chatFab{
+    position:fixed;
+    bottom:28px;right:28px;
+    width:56px;height:56px;
+    border-radius:50%;
+    background:var(--maroon);
+    border:3px solid var(--ochre);
+    color:var(--white);
+    cursor:pointer;
+    box-shadow:0 4px 18px rgba(85,21,22,0.35);
+    display:flex;align-items:center;justify-content:center;
+    z-index:1000;
+    transition:transform .15s;
+  }
+  #chatFab:hover{transform:scale(1.08);}
+  #chatFab svg{pointer-events:none;}
+
+  #chatPanel{
+    position:fixed;
+    bottom:96px;right:28px;
+    width:360px;
+    max-height:520px;
+    display:flex;flex-direction:column;
+    background:var(--white);
+    border:1px solid var(--grey-light);
+    border-top:4px solid var(--ochre);
+    border-radius:10px;
+    box-shadow:0 8px 32px rgba(43,41,38,0.18);
+    z-index:999;
+    overflow:hidden;
+    transition:opacity .2s, transform .2s;
+  }
+  #chatPanel.hidden{
+    opacity:0;pointer-events:none;transform:translateY(12px);
+  }
+  .chat-header{
+    background:var(--maroon);
+    color:var(--white);
+    padding:12px 16px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:0.9rem;
+    font-weight:700;
+    display:flex;align-items:center;gap:8px;
+  }
+  .chat-header .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--ochre);flex-shrink:0;
+  }
+  .chat-header-text{flex:1;}
+  .chat-header-text .chat-title{font-size:0.9rem;font-weight:700;}
+  .chat-header-text .chat-sub{font-size:0.72rem;color:var(--ochre-light);font-weight:400;margin-top:1px;}
+  .chat-close{
+    background:none;border:none;color:var(--grey-light);
+    cursor:pointer;font-size:1.2rem;line-height:1;padding:0;
+  }
+  .chat-chips{
+    display:flex;flex-wrap:wrap;gap:6px;
+    padding:10px 12px 4px;
+    border-bottom:1px solid var(--grey-light);
+  }
+  .chip{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:0.74rem;
+    padding:5px 11px;
+    border:1.5px solid var(--ochre);
+    border-radius:16px;
+    color:var(--maroon);
+    background:var(--cream);
+    cursor:pointer;
+    transition:background .12s,color .12s;
+  }
+  .chip:hover{background:var(--ochre);color:var(--white);}
+  #chatMessages{
+    flex:1;
+    overflow-y:auto;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:0.88rem;
+  }
+  .msg{
+    max-width:88%;
+    padding:9px 13px;
+    border-radius:14px;
+    line-height:1.45;
+    word-break:break-word;
+  }
+  .msg.bot{
+    background:var(--cream);
+    border:1px solid var(--grey-light);
+    align-self:flex-start;
+    border-bottom-left-radius:4px;
+    color:var(--charcoal);
+  }
+  .msg.user{
+    background:var(--maroon);
+    color:var(--white);
+    align-self:flex-end;
+    border-bottom-right-radius:4px;
+  }
+  .msg.typing{color:var(--grey);font-style:italic;}
+  .chat-input-row{
+    display:flex;
+    gap:8px;
+    padding:10px 12px;
+    border-top:1px solid var(--grey-light);
+    background:var(--white);
+  }
+  #chatInput{
+    flex:1;
+    padding:9px 12px;
+    border:2px solid var(--grey-light);
+    border-radius:20px;
+    font-size:0.88rem;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    outline:none;
+    resize:none;
+  }
+  #chatInput:focus{border-color:var(--ochre);}
+  #chatSend{
+    background:var(--maroon);
+    border:none;
+    border-radius:50%;
+    width:36px;height:36px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    color:var(--white);
+    transition:background .15s;
+  }
+  #chatSend:hover{background:var(--maroon-light);}
+  #chatSend:disabled{background:var(--grey-light);cursor:not-allowed;}
+
+  @media(max-width:420px){
+    #chatPanel{width:calc(100vw - 24px);right:12px;}
+  }
 </style>
 </head>
 <body>
@@ -226,7 +365,7 @@
   <div class="header-inner">
     <img src="logo.png" alt="iYunivesithi Walter Sisulu logo">
     <div class="header-text">
-      <h1>Library and Information Services</h1>
+      <h1>Library Services</h1>
       <p>DHET Accredited Journal List Lookup · 2026–2027</p>
     </div>
   </div>
@@ -242,7 +381,7 @@
         <option value="issn">ISSN / eISSN</option>
       </select>
     </div>
-    <div class="hint">Start typing — results update as you go. Data sourced from the DHET Master Journal List, supplied for WS Library accreditation checks.</div>
+    <div class="hint">Start typing — results update as you go. Data sourced from the DHET Master Journal List, supplied for WSU Library accreditation checks.</div>
   </div>
 
   <div id="resultsCount"></div>
@@ -252,7 +391,7 @@
 </main>
 
 <footer>
-  Walter Sisulu Library and Information Services &nbsp;·&nbsp; For accreditation queries contact your <span>Faculty Librarian</span> &nbsp;·&nbsp; Source: Department of Higher Education and Training (DHET)
+  Walter Sisulu Library Services &nbsp;·&nbsp; For accreditation queries contact your <span>Faculty Librarian</span> &nbsp;·&nbsp; Source: Department of Higher Education and Training (DHET)
 </footer>
 
 <script src="journals_data.js"></script>
@@ -346,6 +485,127 @@ function renderStats(){
 
 renderWelcome();
 renderStats();
+</script>
+<!-- ── Library Assistant Chat ── -->
+<button id="chatFab" title="Ask the Library Assistant">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+</button>
+
+<div id="chatPanel" class="hidden">
+  <div class="chat-header">
+    <div class="dot"></div>
+    <div class="chat-header-text">
+      <div class="chat-title">iWS LibAI Assistant</div>
+      <div class="chat-sub">iYunivesithi Walter Sisulu Library</div>
+    </div>
+    <button class="chat-close" id="chatClose" title="Close">&#x2715;</button>
+  </div>
+  <div class="chat-chips" id="chatChips">
+    <button class="chip">iWS Libraries</button>
+    <button class="chip">LibGuides page</button>
+    <button class="chip">Research tools</button>
+  </div>
+  <div id="chatMessages">
+    <div class="msg bot">Hi! I'm <strong>LibAI</strong>, the iWS Library Assistant. Ask me anything about DHET accreditation, journal submission, or library resources.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chatInput" type="text" placeholder="Message the agent…" autocomplete="off" maxlength="500">
+    <button id="chatSend">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// ── Chat Widget ──────────────────────────────────────────────────────────────
+
+// Azure Function proxy URL — update YOUR_FUNCTION_APP with your real app name
+// e.g. https://wsu-library-proxy.azurewebsites.net/api/chat
+const PROXY_URL = 'https://YOUR_FUNCTION_APP.azurewebsites.net/api/chat';
+
+// Conversation history (OpenAI responses API format)
+const chatHistory = [];
+
+const fab      = document.getElementById('chatFab');
+const panel    = document.getElementById('chatPanel');
+const closeBtn = document.getElementById('chatClose');
+const messages = document.getElementById('chatMessages');
+const chatInput= document.getElementById('chatInput');
+const sendBtn  = document.getElementById('chatSend');
+
+fab.addEventListener('click', () => panel.classList.toggle('hidden'));
+closeBtn.addEventListener('click', () => panel.classList.add('hidden'));
+
+// Quick-prompt chips
+const CHIP_PROMPTS = {
+  'iWS Libraries':   'Tell me about the iYunivesithi Walter Sisulu Libraries — locations, hours, and services.',
+  'LibGuides page':  'What resources are available on the Walter Sisulu University LibGuides page?',
+  'Research tools':  'What research tools does iWS Library offer for students and researchers?'
+};
+document.getElementById('chatChips').addEventListener('click', e => {
+  if(e.target.classList.contains('chip')){
+    chatInput.value = CHIP_PROMPTS[e.target.textContent] || e.target.textContent;
+    sendMessage();
+  }
+});
+
+function appendMsg(text, role){
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.textContent = text;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+  return div;
+}
+
+async function sendMessage(){
+  const text = chatInput.value.trim();
+  if(!text) return;
+  chatInput.value = '';
+  sendBtn.disabled = true;
+
+  appendMsg(text, 'user');
+  chatHistory.push({ role: 'user', content: text });
+
+  const typing = appendMsg('Thinking…', 'bot typing');
+
+  try {
+    const res = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        input: chatHistory
+      })
+    });
+
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    // Extract reply from OpenAI responses API format
+    const reply =
+      data?.output?.[0]?.content?.[0]?.text ||
+      data?.choices?.[0]?.message?.content ||
+      'Sorry, I could not understand the response.';
+
+    typing.className = 'msg bot';
+    typing.textContent = reply;
+    chatHistory.push({ role: 'assistant', content: reply });
+
+  } catch(err) {
+    typing.className = 'msg bot';
+    typing.textContent = '⚠️ Could not reach the assistant. Check that your Azure Function proxy is deployed and the AZURE_AI_API_KEY environment variable is set.';
+    console.error('Library Assistant error:', err);
+  }
+
+  sendBtn.disabled = false;
+  chatInput.focus();
+}
+
+sendBtn.addEventListener('click', sendMessage);
+chatInput.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
 </script>
 </body>
 </html>
